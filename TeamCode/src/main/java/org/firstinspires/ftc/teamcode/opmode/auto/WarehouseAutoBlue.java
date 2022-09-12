@@ -59,10 +59,13 @@ public class WarehouseAutoBlue extends LinearOpMode {
 
         drive.setPoseEstimate(loc);
         Trajectory toShippingHub = drive.trajectoryBuilder(loc)
-                .lineTo(new Vector2d(-6, 24.75 + hubDropoffOffset))
+                .lineTo(new Vector2d(-8, 24.75 + hubDropoffOffset))
                 .build();
         Trajectory backAway = drive.trajectoryBuilder(toShippingHub.end())
-                .lineTo(new Vector2d(8, 28 + hubDropoffOffset))
+                .lineTo(new Vector2d(-8, 50))
+                .build();
+        Trajectory toEdge = drive.trajectoryBuilder(backAway.end())
+                .lineTo(new Vector2d(8, 50))
                 .build();
 
         robot.setArmPosition(armPosition, ARM_SPEED);
@@ -75,6 +78,7 @@ public class WarehouseAutoBlue extends LinearOpMode {
         drive.followTrajectory(backAway);
         robot.setArmPosition(Robot.ARM_BACK, ARM_SPEED); // TODO: Use a time marker to start moving the arm slightly after we move away from the hub
         while (robot.armIsBusy()) {}
+        drive.followTrajectory(toEdge);
 //        if (teamElementLoc == OpenCVElementTracker.LOCATION.UNKNOWN) { return; }
         robot.drive(-1, 0, 0, SPRINT_SPEED);
         sleep(SPRINT_TIME);

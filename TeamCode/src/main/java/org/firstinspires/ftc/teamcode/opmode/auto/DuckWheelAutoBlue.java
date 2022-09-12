@@ -61,7 +61,10 @@ public class DuckWheelAutoBlue extends LinearOpMode {
         Trajectory toShippingHub = drive.trajectoryBuilder(loc)
                 .lineTo(new Vector2d(-16, 24.75 + hubDropoffOffset))
                 .build();
-        Trajectory toDuckWheel = drive.trajectoryBuilder(toShippingHub.end())
+        Trajectory backAway = drive.trajectoryBuilder(toShippingHub.end())
+                .lineTo(new Vector2d(-19, 50))
+                .build();
+        Trajectory toDuckWheel = drive.trajectoryBuilder(backAway.end())
                 .lineTo(new Vector2d(-50, 58))
                 .build();
         Trajectory toStorageUnit = drive.trajectoryBuilder(toDuckWheel.end())
@@ -75,6 +78,7 @@ public class DuckWheelAutoBlue extends LinearOpMode {
         drive.followTrajectory(toShippingHub);
         robot.setClawPosition(Robot.CLAW_OPEN);
         sleep(CLAW_MOVE_MAX_TIME);
+        drive.followTrajectory(backAway);
         robot.setArmPosition(Robot.ARM_BACK, ARM_SPEED); // TODO: Use a time marker to start moving the arm slightly after we move away from the hub
         drive.followTrajectory(toDuckWheel);
         drive.turn(Math.toRadians(DUCKWHEEL_ROTATION_OFFSET));
